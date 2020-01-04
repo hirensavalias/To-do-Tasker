@@ -1,72 +1,36 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { TaskList } from './List';
 
 class App extends Component {
   state = {
-    data: [],
-    id: 0,
-    message: '',
-    intervalIsSet: false,
-    idToDelete: null,
-    idToUpdate: null,
-    objectToUpdate: null,
-    userId: `user${parseInt((Math.random()*10000000))}`,
+    username: '',
+    auth: true,
   };
 
-  componentDidMount() {
-    this.getDataFromDb();
-    if (!this.state.intervalIsSet) {
-      let interval = setInterval(this.getDataFromDb, 1000);
-      this.setState({ intervalIsSet: interval });
-    }
+  login = (username) => {
+    axios.post('http://localhost:3001/api/login', { username: this.state.username }).then(res => {
+      this.setState({ auth: true });
+    });
   }
-
-  componentWillUnmount() {
-    if (this.state.intervalIsSet) {
-      clearInterval(this.state.intervalIsSet);
-      this.setState({ intervalIsSet: null });
-    }
-  }
-
-  getDataFromDb = () => {
-    fetch('http://localhost:3001/api/getMessages')
-      .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }));
-  };
-
-  sendMessage = (message) => {
-    message && axios.post('http://localhost:3001/api/sendMessage', { userId: this.state.userId, message });
-    this.setState({ message: '' });
-  };
 
   render() {
-    const { data } = this.state;
+    const { auth } = this.state;
     return (
       <div>
-        <h1>Chat: {this.state.userId}</h1>
-        <ul>
-          {data.length <= 0
-            ? 'NO DB ENTRIES YET'
-            : data.map((dat) => (
-                <li style={{ padding: '10px' }} key={data.message}>
-                  <span style={{ color: 'gray' }}> user: </span> {dat.userId} <br />
-                  <span style={{ color: 'gray' }}> data: </span>
-                  {dat.message}
-                </li>
-              ))}
-        </ul>
-        <div style={{ padding: '10px' }}>
+        {!auth && <div style={{ padding: '10px' }}>
           <input
             type="text"
-            onChange={(e) => this.setState({ message: e.target.value })}
-            placeholder="write a message"
-            value={this.state.message}
+            onChange={(e) => this.setState({ username: e.target.value })}
+            placeholder="enter username"
+            value={this.state.username}
             style={{ width: '200px' }}
           />
-          <button onClick={() => this.sendMessage(this.state.message)}>
-            send
+          <button onClick={() => this.login(this.state.username)}>
+            login
           </button>
-        </div>
+        </div>}
+        {auth && <TaskList/>}
       </div>
     );
   }
