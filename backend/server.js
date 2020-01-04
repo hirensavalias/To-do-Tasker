@@ -7,7 +7,7 @@ var io = require('socket.io')(http);
 import _ from 'lodash';
 
 const app = express();
-const API_PORT = 3001;
+const API_PORT = process.env.PORT || 3001;
 app.use(cors());
 const router = express.Router();
 
