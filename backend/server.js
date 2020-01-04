@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
+const path = require('path');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 import _ from 'lodash';
@@ -14,6 +15,11 @@ const router = express.Router();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 router.post('/login', (req, res) => {
   const { username } = req.body;
