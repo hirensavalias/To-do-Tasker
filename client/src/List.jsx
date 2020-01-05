@@ -18,6 +18,7 @@ import Icon from '@material-ui/core/Icon';
 import axios from 'axios';
 import io from 'socket.io-client';
 
+let API = 'http://'.concat(window.location.host);
 var socket = io();
 socket.emit('chat message', 'tset');
 const useStyles = makeStyles(theme => ({
@@ -59,7 +60,7 @@ export function TaskList() {
     const [taskList, setTaskList] = React.useState([]);
     const [duplicateTask, setDuplicateTask] = React.useState(false);
     const getTasks = () => {
-        axios.get('http://localhost:3001/api/getTasks').then(res => {
+        axios.get(API.concat('/api/getTasks')).then(res => {
             setTaskList(res.data.tasks);
         });
     };
@@ -89,7 +90,7 @@ export function TaskList() {
     const addTask = () => {
         if (taskname){
             setDuplicateTask(false);
-            axios.post('http://localhost:3001/api/addTask', { task: taskname }).then(res => {
+            axios.post(API.concat('/api/addTask'), { task: taskname }).then(res => {
                 setTaskname('');
                 setOpen(false);
             }).catch(err => {
@@ -103,7 +104,7 @@ export function TaskList() {
     }
 
     const deleteTask = (taskId) => {
-        axios.delete(`http://localhost:3001/api/deleteTask/${taskId}`);
+        axios.delete(API.concat(`api/deleteTask/${taskId}`));
     }
 
     return (
