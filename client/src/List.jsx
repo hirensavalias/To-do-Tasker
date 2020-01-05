@@ -18,7 +18,7 @@ import Icon from '@material-ui/core/Icon';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-let API = 'http://'.concat(window.location.host);
+let API = 'https://'.concat(window.location.host);
 var socket = io();
 socket.emit('chat message', 'tset');
 const useStyles = makeStyles(theme => ({
