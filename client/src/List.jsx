@@ -150,7 +150,12 @@ export function TaskList() {
         >
             <Container className={classes.paper}>
                 <form className={classes.form} noValidate autoComplete="off">
-                    <TextField id="standard-basic" error={duplicateTask} label="task name" helperText={duplicateTask && "task already exist."} onChange={(e) => {setTaskname(e.target.value)}}/>
+                    <TextField id="standard-basic" error={duplicateTask} onKeyPress={e => {
+                        if (e.key === 'Enter'){
+                            e.preventDefault();
+                            addTask();
+                        }
+                    }} label="task name" helperText={duplicateTask && "task already exist."} onChange={(e) => {setTaskname(e.target.value)}}/>
                     <Icon onClick={addTask}>send</Icon>
                 </form>
             </Container>
